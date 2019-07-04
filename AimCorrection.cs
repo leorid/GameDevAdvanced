@@ -24,31 +24,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ===============================
 
-using System.Collections;
-using System.Collections.Generic;
+// How to use: 
+// 1) parent an empty (which is the weapon muzzle and should be placed on the position where projectiles
+// are spawned) to a weapon.
+// 2) parent the weapon to the rotation point (which is the origin)
+// 3) drag and drop the empty to the _weaponMuzzle and the rotation point to the _origin
+// 4) for testing you can create another empty and drag and drop it to _target field
+// 5) press play and move the target
+
 using UnityEngine;
 
 public class AimCorrection : MonoBehaviour
 {
-	[SerializeField] Transform _origin;
-	[SerializeField] Transform _target;
-	[SerializeField] Transform _weaponMuzzle;
+	[SerializeField] Transform _origin = null;
+	[SerializeField] Transform _target = null;
+	[SerializeField] Transform _weaponMuzzle = null;
 
-	[SerializeField] bool _drawDebugInfo;
+	[SerializeField] bool _drawDebugInfo = false;
 	[SerializeField] bool _aimOnUpdate = true;
+	[SerializeField] bool _aimOnLateUpdate = true;
 
 	Quaternion _originOffsetRot;
 
 	void Update()
 	{
-		if (_target && _aimOnUpdate)
+		if (_aimOnUpdate)
 		{
-			Aim(_target.position);
+			AimAtTarget();
 		}
-
-		if (_drawDebugInfo)
+		if (_drawDebugInfo && _weaponMuzzle)
 		{
 			Debug.DrawRay(_weaponMuzzle.position, _weaponMuzzle.forward * 200, Color.magenta);
+		}
+	}
+
+	void LateUpdate()
+	{
+		if (_aimOnLateUpdate)
+		{
+			AimAtTarget();
+		}
+	}
+
+	public void AimAtTarget()
+	{
+		if (_target)
+		{
+			Aim(_target.position);
 		}
 	}
 
@@ -172,7 +194,7 @@ public class AimCorrection : MonoBehaviour
 		_origin.rotation = resultRotation * _originOffsetRot;
 	}
 
-	public void DrawAxisCross(Vector3 point, float size, Color color)
+	void DrawAxisCross(Vector3 point, float size, Color color)
 	{
 		Debug.DrawLine(point + Vector3.up * size, point - Vector3.up * size, color);
 		Debug.DrawLine(point + Vector3.right * size, point - Vector3.right * size, color);
