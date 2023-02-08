@@ -1,5 +1,5 @@
 // ===============================
-// AUTHOR   :	Ing. John Dittrich
+// AUTHOR   :	       John Leorid
 // CREATE DATE     :    20.05.2019
 // NOTE     :  Always include this 
 //			   Header when copying 
